@@ -3,6 +3,9 @@ package pl.veterinaryClinicApplicationServer.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.veterinaryClinicApplicationServer.model.*;
+import pl.veterinaryClinicApplicationServer.repository.DateOfTheVisitRepository;
+import pl.veterinaryClinicApplicationServer.repository.PasswordsRepository;
+import pl.veterinaryClinicApplicationServer.repository.UsersRepository;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -88,9 +91,22 @@ public class UsersController {
     //This method takes object users with date and save it in database.
     @PutMapping("/addTerms")
     public void addTerms(@RequestBody DateOfTheVisit dateOfTheVisit) {
-
         dateOfTheVisitRepository.save(dateOfTheVisit);
     }
+
+    @PutMapping("/addTermsWithoutAccount")
+    public void addTermsWithoutAccount(@RequestBody Users users) {
+        System.out.println(users.getNickname());
+        String term = users.getNickname();
+        users.setNickname("696966969");
+        System.out.println(users.getNickname());
+        users.setPermissions(3);
+        usersRepository.save(users);
+        List<Users> list = new ArrayList<>(usersRepository.findByNickname("696966969"));
+        DateOfTheVisit dotv = new DateOfTheVisit(term, list.get(0).getId());
+        dateOfTheVisitRepository.save(dotv);
+    }
+
 
 
     //Compares next days with "DateOfTheVisit" DB and deletes reserved terms from free terms array(rewrittenDatesV2).
@@ -191,32 +207,32 @@ public class UsersController {
 
     //This method confirms user account
     @GetMapping("/contest/{id}")
-    public void  conTest(@PathVariable(value = "id") int id){
+    public void conTest(@PathVariable(value = "id") int id) {
         List<Users> findUser = new ArrayList<>(usersRepository.findById(id));
-        if(findUser.size() > 0){
-            findUser.get(0).getPasswords().setConfirmed(1);
+        if (findUser.size() > 0) {
+          //  findUser.get(0).getPasswords().setConfirmed(1);
             usersRepository.save(findUser.get(0));
         }
     }
 
     @GetMapping("/findUser/{userName}")
-    public Users findUser(@PathVariable(value =  "userName") String userName){
+    public Users findUser(@PathVariable(value = "userName") String userName) {
         List<Users> findUser = new ArrayList<>(usersRepository.findByNickname(userName));
-        if(findUser.size() == 1) {
+        if (findUser.size() == 1) {
             return findUser.get(0);
-        }else {
+        } else {
             Users tmpUser = new Users("no found", "no found");
             return tmpUser;
         }
     }
 
     @PostMapping("/findUserForAdmin")
-    public Users[] findUserForAdmin(@RequestBody Users users){
-        List<Users> findUserForAdmin = new ArrayList<>(usersRepository.findByNameAndLastname(users.getName(),users.getLastname()));
+    public Users[] findUserForAdmin(@RequestBody Users users) {
+        List<Users> findUserForAdmin = new ArrayList<>(usersRepository.findByNameAndLastname(users.getName(), users.getLastname()));
 
-        if(findUserForAdmin.size() != 0){
-            Users[] usersArray = new Users[findUserForAdmin.size() ];
-            for(int i=0;i < findUserForAdmin.size();i++ ){
+        if (findUserForAdmin.size() != 0) {
+            Users[] usersArray = new Users[findUserForAdmin.size()];
+            for (int i = 0; i < findUserForAdmin.size(); i++) {
                 usersArray[i] = findUserForAdmin.get(i);
             }
             return usersArray;

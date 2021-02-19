@@ -7,52 +7,26 @@ import javax.persistence.*;
 public class Passwords {
 
     @Id
+    @Column(name = "password_id")
     private int id;
 
     private String password;
 
-    private int confirmed;
+    @OneToOne(mappedBy = "passwords", cascade = CascadeType.ALL)
+    private Users users;
+
+    @OneToOne(mappedBy = "passwords", cascade = CascadeType.ALL)
+    private Doctors doctors;
+    @OneToOne(mappedBy = "passwords", cascade = CascadeType.ALL)
+    private Admins admins;
 
     @Override
     public String toString() {
         return "Passwords{" +
                 "id=" + id +
                 ", password='" + password + '\'' +
-                ", confirmed=" + confirmed +
                 ", users=" + users +
                 '}';
-    }
-
-    public int getConfirmed() {
-        return confirmed;
-    }
-
-    public void setConfirmed(int confirmed) {
-        this.confirmed = confirmed;
-    }
-
-    @OneToOne(mappedBy = "passwords", cascade = CascadeType.ALL)
-    private Users users;
-
-
-    public Passwords(){super();}
-
-    public Passwords(int id, String password){
-        this.id = id;
-        this.password = password;
-
-    }
-
-    public Passwords(int id, String password, Users users){
-        this.id = id;
-        this.password = password;
-        this.users = users;
-    }
-    public Passwords(int id, String password, int confirmed, Users users){
-        this.id = id;
-        this.password = password;
-        this.confirmed = confirmed;
-        this.users = users;
     }
 
     public int getId() {
@@ -78,6 +52,4 @@ public class Passwords {
     public void setUsers(Users users) {
         this.users = users;
     }
-
-
 }

@@ -18,6 +18,8 @@ public class DateOfTheVisit {
 
     private int userid;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Doctors doctors;
 
 
     public DateOfTheVisit() {
@@ -61,8 +63,7 @@ public class DateOfTheVisit {
         this.dateof = dateof;
     }
 
-    public DateOfTheVisit(int ID, String dateof, int userid) {
-        this.ID = ID;
+    public DateOfTheVisit(String dateof, int userid) {
         this.dateof = dateof;
         this.userid = userid;
     }

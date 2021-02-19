@@ -3,9 +3,9 @@ package pl.veterinaryClinicApplicationServer.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
-import pl.veterinaryClinicApplicationServer.model.PasswordsRepository;
+import pl.veterinaryClinicApplicationServer.repository.PasswordsRepository;
 import pl.veterinaryClinicApplicationServer.model.Users;
-import pl.veterinaryClinicApplicationServer.model.UsersRepository;
+import pl.veterinaryClinicApplicationServer.repository.UsersRepository;
 import pl.veterinaryClinicApplicationServer.service.MailService;
 
 import java.util.ArrayList;
@@ -64,21 +64,17 @@ public class RegistrationController {
     // and try to match password to user. After correct match method sends an instance of the users class to the client.
     @PostMapping("/userLogInPath")
     public Users userLogIn(@RequestBody Users users) {
-        System.out.println("1");
         List<Users> correctUsers = new ArrayList<>(usersRepository.findByNickname(users.getNickname()));
-        System.out.println("2");
         Users tmpFalseUser = new Users("false", "false");
-        System.out.println("3");
         System.out.println(correctUsers.size());
         for (int i = 0; i < correctUsers.size(); i++) {
             //&& correctUsers.get(i).getPasswords().getConfirmed()==1
-            if (correctUsers.get(i).getPasswords().getPassword().equals(users.getPasswords().getPassword())
-                    && (correctUsers.get(i).getPasswords().getConfirmed()==1 || correctUsers.get(i).getPasswords().getConfirmed()==2)) {
+            if (correctUsers.get(i).getPasswords().getPassword().equals(users.getPasswords().getPassword())) {
                 users.setId(correctUsers.get(i).getId());
                 // users.getPasswords().setPassword(String.valueOf(correctUsers.get(i).getId()));
                 System.out.println("true");
                 return users;
-            } else if (correctUsers.get(i).getPasswords().getPassword().equals(users.getPasswords().getPassword()) && correctUsers.get(i).getPasswords().getConfirmed()==0 ){
+            } else if (correctUsers.get(i).getPasswords().getPassword().equals(users.getPasswords().getPassword())){
                 System.out.println("Not confirmed");
                 tmpFalseUser.setName("NC");
                 return tmpFalseUser;
@@ -90,7 +86,7 @@ public class RegistrationController {
         return tmpFalseUser;
     }
 
-    // Create user
+    //Create user
     //Password have the same id as user
     @PostMapping(path = "/create")
     public Users createUser(@RequestBody Users users) {

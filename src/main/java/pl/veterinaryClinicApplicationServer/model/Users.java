@@ -20,12 +20,15 @@ public class Users {
 
     private String email;
 
-    @Column(name = "last_name")
     private String lastname;
+
+    private int permissions;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Passwords passwords;
 
+    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
+    private History history;
 
 
     public Users() {
@@ -64,6 +67,19 @@ public class Users {
     }
 
 
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id=" + id +
+                ", nickname='" + nickname + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", permissions='" + permissions + '\'' +
+                ", passwords=" + passwords +
+                ", history=" + history +
+                '}';
+    }
 
     public int getId() {
         return id;
@@ -105,6 +121,14 @@ public class Users {
         this.lastname = lastname;
     }
 
+    public int getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(int permissions) {
+        this.permissions = permissions;
+    }
+
     public Passwords getPasswords() {
         return passwords;
     }
@@ -113,16 +137,11 @@ public class Users {
         this.passwords = passwords;
     }
 
+    public History getHistory() {
+        return history;
+    }
 
-    @Override
-    public String toString() {
-        return "Users{" +
-                "id=" + id +
-                ", nickname='" + nickname + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", passwords=" + passwords +
-                '}';
+    public void setHistory(History history) {
+        this.history = history;
     }
 }
