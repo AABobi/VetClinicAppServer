@@ -6,29 +6,17 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "USERS" )
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
-public class Users {
+public class Users extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  int id;
+    private int id;
 
-    private String nickname;
-
-    private String name;
-
-    private String email;
-
-    private String lastname;
-
-    private int permissions;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Passwords passwords;
 
-    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
-    private History history;
+    /*@OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
+    private History history;*/
 
 
     public Users() {
@@ -40,44 +28,57 @@ public class Users {
         this.lastname = lastname;
     }
 
-    public Users( String nickname,String name, String lastname) {
+    public Users(int id,String name, String lastname, String email) {
+        this.id = id;
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+    }
+    public Users(String nickname, String name, String lastname) {
         this.nickname = nickname;
         this.name = name;
         this.lastname = lastname;
     }
 
-    public Users( String nickname,String name, String lastname, String email) {
+    public Users(String nickname, String name, String lastname, String email) {
         this.nickname = nickname;
         this.name = name;
         this.lastname = lastname;
         this.email = email;
     }
 
-    public Users(String f){
+    public Users(String f) {
         this.nickname = f;
         this.name = f;
         this.lastname = f;
     }
-    public Users( String nickname, String name, String lastname,String email, Passwords passwords) {
+
+    public Users(String nickname, String name, String lastname, String email, Passwords passwords) {
         this.nickname = nickname;
         this.name = name;
         this.lastname = lastname;
         this.email = email;
         this.passwords = passwords;
     }
-
-
+    public Users(String email, String name, String lastname, String nickname,String permissions, Passwords passwords) {
+        this.nickname = nickname;
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.permissions = permissions;
+        this.passwords = passwords;
+    }
     @Override
     public String toString() {
         return "Users{" +
                 "id=" + id +
+                ", passwords=" + passwords +
+               // ", history=" + history +
                 ", nickname='" + nickname + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", permissions='" + permissions + '\'' +
-                ", passwords=" + passwords +
-                ", history=" + history +
                 '}';
     }
 
@@ -89,46 +90,6 @@ public class Users {
         this.id = id;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public int getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(int permissions) {
-        this.permissions = permissions;
-    }
-
     public Passwords getPasswords() {
         return passwords;
     }
@@ -137,11 +98,13 @@ public class Users {
         this.passwords = passwords;
     }
 
-    public History getHistory() {
+    /*public History getHistory() {
         return history;
     }
 
     public void setHistory(History history) {
         this.history = history;
-    }
+    }*/
+
+
 }

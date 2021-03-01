@@ -100,13 +100,12 @@ public class UsersController {
         String term = users.getNickname();
         users.setNickname("696966969");
         System.out.println(users.getNickname());
-        users.setPermissions(3);
+        users.setPermissions("admin");
         usersRepository.save(users);
         List<Users> list = new ArrayList<>(usersRepository.findByNickname("696966969"));
-        DateOfTheVisit dotv = new DateOfTheVisit(term, list.get(0).getId());
+        DateOfTheVisit dotv = new DateOfTheVisit(term, list.get(0));
         dateOfTheVisitRepository.save(dotv);
     }
-
 
 
     //Compares next days with "DateOfTheVisit" DB and deletes reserved terms from free terms array(rewrittenDatesV2).
@@ -210,7 +209,7 @@ public class UsersController {
     public void conTest(@PathVariable(value = "id") int id) {
         List<Users> findUser = new ArrayList<>(usersRepository.findById(id));
         if (findUser.size() > 0) {
-          //  findUser.get(0).getPasswords().setConfirmed(1);
+            findUser.get(0).setPermissions("Users");
             usersRepository.save(findUser.get(0));
         }
     }
@@ -228,17 +227,28 @@ public class UsersController {
 
     @PostMapping("/findUserForAdmin")
     public Users[] findUserForAdmin(@RequestBody Users users) {
-        List<Users> findUserForAdmin = new ArrayList<>(usersRepository.findByNameAndLastname(users.getName(), users.getLastname()));
-
-        if (findUserForAdmin.size() != 0) {
-            Users[] usersArray = new Users[findUserForAdmin.size()];
-            for (int i = 0; i < findUserForAdmin.size(); i++) {
-                usersArray[i] = findUserForAdmin.get(i);
-            }
-            return usersArray;
+        List<Users> usersList = new ArrayList<>(usersRepository.findByNameAndLastname(users.getName(), users.getLastname()));
+        if(usersList.size() != 0) {
+            Users[] arrayOfUsers = new Users[usersList.size()];
+              for(int i = 0; i < usersList.size(); i++){
+                  arrayOfUsers[i] = usersList.get(i);
+              }
+            return arrayOfUsers;
         }
+        //return tmp;
+       return null;
+    }
 
-        return null;
+    @GetMapping("/findAllUsersForAdmin")
+    public Users[] findAllUsersForAdmin(){
+        List<Users> usersList = new ArrayList<>(usersRepository.findAll());
+        int i=0;
+        Users[] arrayOfUsers = new Users[usersList.size()];
+        for(Users u: usersList){
+            arrayOfUsers[i] = u;
+            i++;
+        }
+        return arrayOfUsers;
     }
 
     // Create user

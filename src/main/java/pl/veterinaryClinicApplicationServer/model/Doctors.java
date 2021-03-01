@@ -3,20 +3,20 @@ package pl.veterinaryClinicApplicationServer.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "doctors")
 public class Doctors extends User{
 
     @Id
-    private int doctors_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    @OneToOne(mappedBy = "doctors", cascade = CascadeType.ALL)
-    private DateOfTheVisit dateOfTheVisit;
+  /*  @OneToOne(mappedBy = "doctors", cascade = CascadeType.ALL)
+    private DateOfTheVisit dateOfTheVisit;*/
 
     @OneToOne(cascade = CascadeType.ALL)
     private Passwords passwords;
 
-    @OneToOne(mappedBy = "doctors", cascade = CascadeType.ALL)
-    private History history;
+    /*@OneToOne(mappedBy = "doctors", cascade = CascadeType.ALL)
+    private History history;*/
 
     public Doctors(){
 
@@ -25,10 +25,10 @@ public class Doctors extends User{
     @Override
     public String toString() {
         return "Doctors{" +
-                "doctors_id=" + doctors_id +
-                ", dateOfTheVisit=" + dateOfTheVisit +
+                "id=" + id +
+               // ", dateOfTheVisit=" + dateOfTheVisit +
                 ", passwords=" + passwords +
-                ", history=" + history +
+                //", history=" + history +
                 ", nickname='" + nickname + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
@@ -37,21 +37,21 @@ public class Doctors extends User{
                 '}';
     }
 
-    public int getDoctors_id() {
-        return doctors_id;
+    public int getId() {
+        return id;
     }
 
-    public void setDoctors_id(int doctors_id) {
-        this.doctors_id = doctors_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public DateOfTheVisit getDateOfTheVisit() {
+    /*public DateOfTheVisit getDateOfTheVisit() {
         return dateOfTheVisit;
     }
 
     public void setDateOfTheVisit(DateOfTheVisit dateOfTheVisit) {
         this.dateOfTheVisit = dateOfTheVisit;
-    }
+    }*/
 
     public Passwords getPasswords() {
         return passwords;
@@ -61,11 +61,13 @@ public class Doctors extends User{
         this.passwords = passwords;
     }
 
-    public History getHistory() {
+   /*public History getHistory() {
         return history;
     }
 
     public void setHistory(History history) {
         this.history = history;
-    }
+    }*/
+
+
 }

@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class History {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;

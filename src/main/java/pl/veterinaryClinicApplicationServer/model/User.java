@@ -1,5 +1,11 @@
 package pl.veterinaryClinicApplicationServer.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
 public class User {
 
     protected String nickname;
@@ -11,6 +17,7 @@ public class User {
     protected String lastname;
 
     protected String permissions;
+
 
     public String getNickname() {
         return nickname;

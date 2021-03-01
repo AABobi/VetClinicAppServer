@@ -12,11 +12,12 @@ public class DateOfTheVisit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ID;
+    private int id;
 
     private String dateof;
 
-    private int userid;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Users users;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Doctors doctors;
@@ -25,21 +26,26 @@ public class DateOfTheVisit {
     public DateOfTheVisit() {
     }
 
+    public DateOfTheVisit(String dateof, Users users){
+        this.dateof = dateof;
+        this.users = users;
+    }
     @Override
     public String toString() {
         return "DateOfTheVisit{" +
-                "ID=" + ID +
+                "ID=" + id +
                 ", dateof='" + dateof + '\'' +
-                ", userid=" + userid +
+                ", users=" + users +
+                ", doctors=" + doctors +
                 '}';
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int ID) {
+        this.id = ID;
     }
 
     public String getDateof() {
@@ -50,23 +56,28 @@ public class DateOfTheVisit {
         this.dateof = dateof;
     }
 
-    public int getUserid() {
-        return userid;
+    public Users getUsers() {
+        return users;
     }
 
-    public void setUserid(int userid) {
-        this.userid = userid;
+    public void setUsers(Users users) {
+        this.users = users;
     }
 
-    public DateOfTheVisit(int ID, String dateof) {
-        this.ID = ID;
+    public Doctors getDoctors() {
+        return doctors;
+    }
+
+    public void setDoctors(Doctors doctors) {
+        this.doctors = doctors;
+    }
+
+    public DateOfTheVisit(int id, String dateof) {
+        this.id = id;
         this.dateof = dateof;
     }
 
-    public DateOfTheVisit(String dateof, int userid) {
-        this.dateof = dateof;
-        this.userid = userid;
-    }
+
 
     public String[] isWeekend(Calendar cal, String[] array, int i) {
         if ((cal.get(Calendar.DAY_OF_WEEK) == 1) || (cal.get(Calendar.DAY_OF_WEEK) == 7)) {

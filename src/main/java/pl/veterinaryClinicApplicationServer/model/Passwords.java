@@ -7,25 +7,34 @@ import javax.persistence.*;
 public class Passwords {
 
     @Id
-    @Column(name = "password_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String password;
 
-    @OneToOne(mappedBy = "passwords", cascade = CascadeType.ALL)
-    private Users users;
+   /* @OneToOne(mappedBy = "passwords", cascade = CascadeType.ALL)
+    private Users users;*/
 
-    @OneToOne(mappedBy = "passwords", cascade = CascadeType.ALL)
+   /* @OneToOne(mappedBy = "passwords", cascade = CascadeType.ALL)
     private Doctors doctors;
-    @OneToOne(mappedBy = "passwords", cascade = CascadeType.ALL)
-    private Admins admins;
 
+    @OneToOne(mappedBy = "passwords", cascade = CascadeType.ALL)
+    private Admins admins;*/
+
+    public Passwords(){}
+    public Passwords(String password){
+        this.password = password;
+    }
+    public Passwords(int id,String password){
+        this.id = id;
+        this.password = password;
+    }
     @Override
     public String toString() {
         return "Passwords{" +
                 "id=" + id +
                 ", password='" + password + '\'' +
-                ", users=" + users +
+               // ", users=" + users +
                 '}';
     }
 
@@ -45,11 +54,11 @@ public class Passwords {
         this.password = password;
     }
 
-    public Users getUsers() {
+   /* public Users getUsers() {
         return users;
     }
 
     public void setUsers(Users users) {
         this.users = users;
-    }
+    }*/
 }

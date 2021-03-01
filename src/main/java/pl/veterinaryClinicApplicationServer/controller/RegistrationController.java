@@ -3,8 +3,10 @@ package pl.veterinaryClinicApplicationServer.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
+import pl.veterinaryClinicApplicationServer.model.*;
+import pl.veterinaryClinicApplicationServer.repository.AdminsRepository;
+import pl.veterinaryClinicApplicationServer.repository.DoctorsRepository;
 import pl.veterinaryClinicApplicationServer.repository.PasswordsRepository;
-import pl.veterinaryClinicApplicationServer.model.Users;
 import pl.veterinaryClinicApplicationServer.repository.UsersRepository;
 import pl.veterinaryClinicApplicationServer.service.MailService;
 
@@ -15,7 +17,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping({"/"})
 @RestController
-public class RegistrationController {
+public class RegistrationController<T> {
 
     @Autowired
     public PasswordsRepository passwordsRepository;
@@ -26,7 +28,11 @@ public class RegistrationController {
     @Autowired
     private MailService notificationService;
 
+    @Autowired
+    public AdminsRepository adminsRepository;
 
+    @Autowired
+    public DoctorsRepository doctorsRepository;
 
 
     @RequestMapping("send-mail")
@@ -62,7 +68,7 @@ public class RegistrationController {
 
     //Method gets an object(name,last name, password). Then method findByNameAndLastname looks for users with matching values
     // and try to match password to user. After correct match method sends an instance of the users class to the client.
-    @PostMapping("/userLogInPath")
+    /*@PostMapping("/userLogInPath")
     public Users userLogIn(@RequestBody Users users) {
         List<Users> correctUsers = new ArrayList<>(usersRepository.findByNickname(users.getNickname()));
         Users tmpFalseUser = new Users("false", "false");
@@ -84,28 +90,82 @@ public class RegistrationController {
         }
         System.out.println("false");
         return tmpFalseUser;
+    }*/
+
+
+    @PostMapping("/userLogInPath")
+    public Users userLogIn(@RequestBody Users users) {
+        List<Users> correctUsers = new ArrayList<>(usersRepository.findByNickname(users.getNickname()));
+        Users tmpFalseUser = new Users("false", "false");
+
+        if (correctUsers.size() != 0) {
+            if (correctUsers.get(0).getPasswords().getPassword().equals(users.getPasswords().getPassword()) &&
+                    !correctUsers.get(0).getPermissions().equals("Not confirmed")) {
+                users.setId(correctUsers.get(0).getId());
+                // users.getPasswords().setPassword(String.valueOf(correctUsers.get(i).getId()));
+                System.out.println("true");
+                return users;
+            } else if (correctUsers.get(0).getPasswords().getPassword().equals(users.getPasswords().getPassword()) &&
+                    correctUsers.get(0).getPermissions().equals("Not confirmed")) {
+                System.out.println("Not confirmed");
+                tmpFalseUser.setName("NC");
+                return tmpFalseUser;
+            }
+        }
+        List<Admins> correctAdmins = new ArrayList<>(adminsRepository.findByNickname(users.getNickname()));
+        if (correctAdmins.size() == 1) {
+            if (correctAdmins.get(0).getPasswords().getPassword().equals(users.getPasswords().getPassword()) &&
+                    !correctAdmins.get(0).getPermissions().equals("Not confirmed")) {
+                users.setId(correctAdmins.get(0).getId());
+                // users.getPasswords().setPassword(String.valueOf(correctUsers.get(i).getId()));
+                System.out.println("true");
+                return users;
+            } else if (correctAdmins.get(0).getPasswords().getPassword().equals(users.getPasswords().getPassword()) &&
+                    correctAdmins.get(0).getPermissions().equals("Not confirmed")) {
+                System.out.println("Not confirmed");
+                tmpFalseUser.setName("NC");
+                return tmpFalseUser;
+            }
+        }
+        List<Doctors> correctDoctors = new ArrayList<>(doctorsRepository.findByNickname(users.getNickname()));
+        if (correctDoctors.size() == 1) {
+            if (correctDoctors.get(0).getPasswords().getPassword().equals(users.getPasswords().getPassword()) &&
+                    !correctDoctors.get(0).getPermissions().equals("Not confirmed")) {
+                users.setId(correctDoctors.get(0).getId());
+                // users.getPasswords().setPassword(String.valueOf(correctUsers.get(i).getId()));
+                System.out.println("true");
+                return users;
+            } else if (correctDoctors.get(0).getPasswords().getPassword().equals(users.getPasswords().getPassword()) &&
+                    correctDoctors.get(0).getPermissions().equals("Not confirmed")) {
+                System.out.println("Not confirmed");
+                tmpFalseUser.setName("NC");
+                return tmpFalseUser;
+            }
+        }
+        return null;
     }
+
 
     //Create user
     //Password have the same id as user
     @PostMapping(path = "/create")
     public Users createUser(@RequestBody Users users) {
         List<Users> idList = new ArrayList<>(usersRepository.findByNickname(users.getNickname()));
-        Users newUsers, newUsersSecond;
-        if (idList.size() == 0 && usersRepository.findByEmail(users.getEmail()).size() == 0) {
+        Users newUsers;
+        Passwords newUserPassword;
+        //if (idList.size() == 0 && usersRepository.findByEmail(users.getEmail()).size() == 0) {
+          if(1==1){
             idList.removeAll(idList);
-            users.getPasswords().setId(1);
-            newUsers = new Users(users.getNickname(), users.getName(), users.getLastname(), users.getEmail());
+            newUserPassword = new Passwords(users.getPasswords().getPassword());
+              newUsers = new Users(users.getNickname(), users.getName(), users.getLastname(), users.getEmail(),newUserPassword);
+              newUsers = new Users(users.getEmail(), users.getName(), users.getLastname(),users.getNickname(),"Not confirmed",newUserPassword);
             usersRepository.save(newUsers);
-            idList = usersRepository.findByNickname(newUsers.getNickname());
-            users.getPasswords().setId(idList.get(0).getId());
-            newUsers.setPasswords(users.getPasswords());
-            usersRepository.save(newUsers);
+            notificationService.sendEmail(newUsers);
             return newUsers;
-        } else if(usersRepository.findByEmail(users.getEmail()).size() != 0){
+        } else if (usersRepository.findByEmail(users.getEmail()).size() != 0) {
             newUsers = new Users("email");
             return newUsers;
-        }else {
+        } else {
             newUsers = new Users("nickname");
             return newUsers;
         }

@@ -3,34 +3,21 @@ package pl.veterinaryClinicApplicationServer.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "admins")
 public class Admins extends User{
 
     @Id
-    private int admin_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Passwords passwords;
 
-    @Override
-    public String toString() {
-        return "Admins{" +
-                "admin_id=" + admin_id +
-                ", passwords=" + passwords +
-                ", nickname='" + nickname + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", permissions='" + permissions + '\'' +
-                '}';
+    public int getId() {
+        return id;
     }
 
-    public int getAdmin_id() {
-        return admin_id;
-    }
-
-    public void setAdmin_id(int admin_id) {
-        this.admin_id = admin_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Passwords getPasswords() {
@@ -39,5 +26,28 @@ public class Admins extends User{
 
     public void setPasswords(Passwords passwords) {
         this.passwords = passwords;
+    }
+
+    public Admins(){
+
+    }
+
+    public Admins(int id, String nickname, String name, String lastname){
+        this.id = id;
+        this.nickname = nickname;
+        this.name = name;
+        this.lastname = lastname;
+    }
+    @Override
+    public String toString() {
+        return "Admins{" +
+                "id=" + id +
+                ", passwords=" + passwords +
+                ", nickname='" + nickname + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", permissions='" + permissions + '\'' +
+                '}';
     }
 }
