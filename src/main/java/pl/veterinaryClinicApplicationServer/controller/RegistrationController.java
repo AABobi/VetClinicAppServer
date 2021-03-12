@@ -93,6 +93,8 @@ public class RegistrationController<T> {
     }*/
 
 
+    //This methods gets nickname and passwords from client (for now uses object users to handle this task)
+    //With nickname checks what type of "users" is (admin, doctor or normal user) and after found correct user sends relevant information to client.
     @PostMapping("/userLogInPath")
     public Users userLogIn(@RequestBody Users users) {
         List<Users> correctUsers = new ArrayList<>(usersRepository.findByNickname(users.getNickname()));
